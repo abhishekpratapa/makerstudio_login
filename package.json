@@ -1,0 +1,31 @@
+{
+  "name": "makerstudio_login",
+  "version": "1.0.0",
+  "description": "Maker studio login system",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abhishekpratapa/makerstudio_login.git"
+  },
+  "author": "Abhishek Pratapa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abhishekpratapa/makerstudio_login/issues"
+  },
+  "homepage": "https://github.com/abhishekpratapa/makerstudio_login#readme",
+  "dependencies": {
+    "body-parser": "^1.16.1",
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.5.6",
+    "express": "^4.14.1",
+    "jsonwebtoken": "^7.3.0",
+    "mongoose": "^4.8.4",
+    "morgan": "^1.8.1",
+    "pg": "^6.1.2",
+    "sequelize": "^3.30.2"
+  }
+}

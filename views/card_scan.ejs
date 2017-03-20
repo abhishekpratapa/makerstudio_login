@@ -1,0 +1,164 @@
+<html>
+	<head>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+		<!--
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+		-->
+
+		<link rel="stylesheet" href="css/flat-ui.css"/>
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+		<!-- Jquery link -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<script>
+			jQuery(function($) { 
+				$.extend({
+					form: function(url, data, method) {
+						if (method == null) method = 'POST';
+						if (data == null) data = {};
+
+						var form = $('<form>').attr({
+							method: method,
+							action: url
+						}).css({
+							display: 'none'
+						});
+
+						var addData = function(name, data) {
+							if ($.isArray(data)) {
+								for (var i = 0; i < data.length; i++) {
+									var value = data[i];
+									addData(name + '[]', value);
+								}
+							} else if (typeof data === 'object') {
+								for (var key in data) {
+									if (data.hasOwnProperty(key)) {
+										addData(name + '[' + key + ']', data[key]);
+									}
+								}
+							} else if (data != null) {
+								form.append($('<input>').attr({
+									type: 'hidden',
+									name: String(name),
+									value: String(data)
+								}));
+							}
+						};
+
+						for (var key in data) {
+							if (data.hasOwnProperty(key)) {
+								addData(key, data[key]);
+							}
+						}
+
+						return form.appendTo('body');
+					}
+				}); 
+			});
+
+			$(document).ready(function(){
+				$("#card_swipe").focus();
+
+				var previous_card_val = ""
+
+				setInterval(function(){
+
+					$("#card_swipe").focus();
+					
+					if($("#card_swipe").val() == ""){
+						previous_card_val == ""
+					} else if(previous_card_val == $("#card_swipe").val()) {
+						$("#card_swipe").val("");
+						previous_card_val = "";
+					} else {
+						previous_card_val = $("#card_swipe").val();
+					}
+
+				}, 4000);
+
+				$("#card_swipe").keyup(function(event){
+					if(event.keyCode == 13){
+						var card_value = $("#card_swipe").val();
+						$("#card_swipe").val("");
+
+						if(card_value == "" || card_value.length < 3){
+							$("#error").css("display", "block")
+						}else{
+							$.form('/check_card', { "card_val": card_value }).submit();
+						}
+
+					}
+				});
+
+			});
+
+		</script>
+		<style>
+			#error{
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- title -->
+		<div class="row">
+	        <div class="col-md-3">
+	        </div>
+        	<div class="col-md-6"> 
+        		<center><h1><span style="color:gray">MakerStudio</span> Login</h1></center>
+        	</div>
+	        <div class="col-md-3">
+	        </div>
+	    </div>
+
+	    <div class="row" id="error">
+	        <div class="col-md-3">
+	        </div>
+	        <div class="col-md-6"> 
+				<div class="alert alert-danger" role="alert">Something went wrong when reading the card</div>
+	        </div>
+	        <div class="col-md-3"> 
+	        </div>
+	    </div>
+
+	     <!-- hidden container -->
+        <div class="row">
+        	<div class="col-md-3">
+        	</div>
+        	<div class="col-md-6">         	
+				<input type="text" style="opacity:0.0" class="form-control inputs" id="card_swipe"/>
+			</div>
+			<div class="col-md-3"> 
+        	</div>
+        </div>
+
+         <!-- image container -->
+        <div class="row">
+        	<div class="col-md-3">
+        	</div>
+        	<div class="col-md-6">         	
+				<center><img width="200" src="img/card_swipe.jpg"/></center>
+			</div>
+			<div class="col-md-3"> 
+        	</div>
+        </div>
+
+        <!-- ut_id container -->
+        <div class="row">
+        	<div class="col-md-3">
+        	</div>
+        	<div class="col-md-6"> 
+        	<br/>   
+        	<br/>     	
+				<center><span>Please Swipe a valid UT ID card to begin</span></center>
+			</div>
+			<div class="col-md-3"> 
+        	</div>
+        </div>
+
+	</body>
+</html>

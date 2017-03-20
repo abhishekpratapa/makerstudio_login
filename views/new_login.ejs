@@ -1,0 +1,266 @@
+<html>
+	<head>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+		<!--
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+		-->
+
+		<link rel="stylesheet" href="css/flat-ui.css"/>
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+		<!-- Jquery link -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<script>
+			jQuery(function($) { 
+				$.extend({
+					form: function(url, data, method) {
+						if (method == null) method = 'POST';
+						if (data == null) data = {};
+
+						var form = $('<form>').attr({
+							method: method,
+							action: url
+						}).css({
+							display: 'none'
+						});
+
+						var addData = function(name, data) {
+							if ($.isArray(data)) {
+								for (var i = 0; i < data.length; i++) {
+									var value = data[i];
+									addData(name + '[]', value);
+								}
+							} else if (typeof data === 'object') {
+								for (var key in data) {
+									if (data.hasOwnProperty(key)) {
+										addData(name + '[' + key + ']', data[key]);
+									}
+								}
+							} else if (data != null) {
+								form.append($('<input>').attr({
+									type: 'hidden',
+									name: String(name),
+									value: String(data)
+								}));
+							}
+						};
+
+						for (var key in data) {
+							if (data.hasOwnProperty(key)) {
+								addData(key, data[key]);
+							}
+						}
+
+						return form.appendTo('body');
+					}
+				}); 
+			});
+
+			function check_email(email_address){
+				var email_pattern = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+				return email_pattern.test(email_address);
+			}
+
+			function check_name(name){
+				var name_pattern = new RegExp(/^[A-Za-z0-9 ]+$/i)
+				return name_pattern.test(name);
+			}
+
+			function check_eid(eid){
+				if(eid.length > 3){
+					return true;
+				}else{
+					return false;
+				}
+			}
+
+			function check_other(level_checked, name){
+				if(level_checked == "Other"){
+					if(name != "" || name != null){
+						return true;
+					}else{
+						return false;
+					}
+				}else{
+					return true;
+				}
+			}
+
+			$(document).ready(function(){
+				$("#create_user").click(function(){
+
+					var card_value = $("#card_value").val();
+
+					var laser_cutter_value = $("#laser_cutter").is(':checked');
+					var three_d_printer_value = $("#3d_printer").is(':checked');
+					var pcb_mill_value = $("#pcb_mill").is(':checked');
+					var cnc_mill_value = $("#cnc_mill").is(':checked');
+					var plasma_cutter_value = $("#plasma_cutter").is(':checked');
+					var soldering_iron_value = $("#soldering_iron").is(':checked');
+					var desk_space_value = $("#desk_space").is(':checked');
+					var sewing_machine_value = $("#sewing_machine").is(':checked');
+					var stapler_value = $("#stapler").is(':checked');
+					var tools_value = $("#tools").is(':checked');
+					var other_value = $("#other").is(':checked');
+
+					var other_val_sent = $("#other_value").val();
+
+					var level_checked = $("input[name=level]:checked").val();
+					var other_val_sent_2 = $("#other_value_2").val();
+
+					var error = false;
+
+					if(other_value){
+						if(other_val_sent == "" || other_val_sent == null){
+							$("#error").css("display", "block");
+							error = true;
+						}
+					}
+
+					if(!check_other(level_checked, other_val_sent_2)){
+						$("#error").css("display", "block");
+						error = true;
+					}
+
+
+
+					if(!error){
+						$.form('/validate_login', {"card_value": card_value, "laser_cutter_value": laser_cutter_value, "three_d_printer_value": three_d_printer_value, "pcb_mill_value": pcb_mill_value, "cnc_mill_value": cnc_mill_value, "plasma_cutter_value": plasma_cutter_value, "soldering_iron_value": soldering_iron_value, "desk_space_value": desk_space_value, "sewing_machine_value": sewing_machine_value, "stapler_value": stapler_value, "tools_value": tools_value, "other_value": other_value, "other_val_sent": other_val_sent, "level_checked": level_checked, "other_val_sent_2": other_val_sent_2}).submit();
+					}else{
+						alert("error");
+					}
+
+				});
+			});
+
+		</script>
+
+		<style>
+			input[type="radio"] {
+				display: inline;
+				margin-bottom: 0px; 
+			}
+			
+			label > .label-body {
+				margin-left: .5rem;
+				font-weight: normal; 
+			}
+
+			.label-body {
+				position:absolute;
+				width: 500px;
+				top:-40px;
+				left:50;
+				float:right;
+			}
+
+			.label-body_2{
+				position:absolute;
+				width: 100px;
+				left: 30px;
+				padding-top: 10px;
+				padding-left: 20px;
+			}
+
+			.lgn_page_btn{
+				width:100%;
+				margin-bottom: 10px;
+			}
+
+			#error{
+				display: none;
+			}
+
+		</style>
+
+	</head>
+	<body>
+		<!-- title -->
+		<div class="row">
+	        <div class="col-md-3">
+	        </div>
+        	<div class="col-md-6"> 
+        		<center><h1><span style="color:gray">Why are you</span> Here</h1></center>
+        	</div>
+	        <div class="col-md-3">
+	        </div>
+	    </div>
+
+	    <div class="row" id="error">
+	        <div class="col-md-3">
+	        </div>
+	        <div class="col-md-6"> 
+				<div class="alert alert-danger" role="alert">The other field has to be filled out</div>
+	        </div>
+	        <div class="col-md-3"> 
+	        </div>
+	    </div>
+
+		<div class="row">
+        	<div class="col-md-3">
+        	</div>
+        	<div class="col-md-6">   
+		        <center><h3> Select What you are Using </h3></center>
+		       
+		        <div style="width: 100%; display:inline; position:relative;"><input class="form-control inputs" type="checkbox" id="laser_cutter" value="laser_cutter" style="width:60px;" /><span class="label-body">Laser Cutter</span> <br></div>
+				<div style="width: 100%; display:inline; position:relative;"><input class="form-control inputs" type="checkbox" id="3d_printer" value="3d_printer" style="width:60px;" /><span class="label-body">3D Printer</span> <br></div>
+				<div style="width: 100%; display:inline; position:relative;"><input class="form-control inputs" type="checkbox" id="pcb_mill" value="pcb_mill" style="width:60px;" /> <span class="label-body">PCB Mill</span> <br></div>
+				<div style="width: 100%; display:inline; position:relative;"><input class="form-control inputs" type="checkbox" id="cnc_mill" value="cnc_mill"  style="width:60px;" /> <span class="label-body">CNC Mill</span> <br></div>
+				<div style="width: 100%; display:inline; position:relative;"><input class="form-control inputs" type="checkbox" id="plasma_cutter" value="plasma_cutter"  style="width:60px;" /> <span class="label-body">Plasma Cutter</span> <br></div>
+				<div style="width: 100%; display:inline; position:relative;"><input class="form-control inputs" type="checkbox" id="soldering_iron" value="soldering_iron"  style="width:60px;" /> <span class="label-body">Soldering Iron</span> <br></div>
+				<div style="width: 100%; display:inline; position:relative;"><input class="form-control inputs" type="checkbox" id="desk_space" value="desk_space"  style="width:60px;" /> <span class="label-body">Desk Space</span> <br></div>
+				<div style="width: 100%; display:inline; position:relative;"><input class="form-control inputs" type="checkbox" id="sewing_machine" value="sewing_machine"  style="width:60px;" /> <span class="label-body">Sewing Machine</span> <br></div>
+				<div style="width: 100%; display:inline; position:relative;"><input class="form-control inputs" type="checkbox" id="stapler" value="stapler"  style="width:60px;" /> <span class="label-body">Stapler</span> <br></div>
+				<div style="width: 100%; display:inline; position:relative;"><input class="form-control inputs" type="checkbox" id="tools" value="tools"  style="width:60px;" /> <span class="label-body">Tools</span> <br></div>
+				<div style="width: 100%; display:inline; position:relative;"><input class="form-control inputs" type="checkbox" id="other" value="other"  style="width:60px;" /><span class="label-body">Other</span> 
+
+				<input type="text" class="form-control inputs" id="other_value" placeholder="Other"/>
+				
+				<br></div>
+
+			</div>
+			<div class="col-md-3">
+        	</div>
+        </div>
+
+        <div class="row">
+        	<div class="col-md-3">
+        	</div>
+        	<div class="col-md-6">   
+		        <center><h3> Why are you using it? </h3></center>
+		       
+		        <div style="width: 100%"><input class="form-control inputs" type="radio" style="width:60px;" checked="checked" name="level" value="Fun" /> <span class="label-body_2">Fun</span> <br></div>
+				<div style="width: 100%"><input class="form-control inputs" type="radio" style="width:60px;" checked="checked" name="level" value="Class" /> <span class="label-body_2">Class</span> <br></div>
+				<div style="width: 100%"><input class="form-control inputs" type="radio" style="width:60px;" checked="checked" name="level" value="Training" /> <span class="label-body_2">Training</span> <br></div>
+				<div style="width: 100%"><input class="form-control inputs" type="radio" style="width:60px;" checked="checked" name="level" value="Research" /> <span class="label-body_2">Research</span> <br></div>
+				<div style="width: 100%"><input class="form-control inputs" type="radio" style="width:60px;" checked="checked" name="level" value="Other" /> <span class="label-body_2">Other</span>
+				<input type="text" class="form-control inputs" id="other_value_2" placeholder="Other"/>
+				
+				<br></div>
+
+			</div>
+			<div class="col-md-3">
+        	</div>
+        </div>
+
+		<!-- button container -->
+        <div class="row">
+        	<div class="col-md-3">
+			</div>
+			<div class="col-md-6">
+				<button id="create_user" class="btn btn-primary lgn_page_btn">
+					Enter Makerspace
+				</button>
+	        </div>
+			<div class="col-md-3"> 
+        	</div>
+        </div>
+
+        <input style="visibility:hidden" id="card_value" value="<%= card_value %>"/>
+
+	</body>
+</html>

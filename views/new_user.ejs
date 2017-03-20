@@ -1,0 +1,309 @@
+<html>
+	<head>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+		<!--
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+		-->
+
+		<link rel="stylesheet" href="css/flat-ui.css"/>
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+		<!-- Jquery link -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<script>
+			jQuery(function($) { 
+				$.extend({
+					form: function(url, data, method) {
+						if (method == null) method = 'POST';
+						if (data == null) data = {};
+
+						var form = $('<form>').attr({
+							method: method,
+							action: url
+						}).css({
+							display: 'none'
+						});
+
+						var addData = function(name, data) {
+							if ($.isArray(data)) {
+								for (var i = 0; i < data.length; i++) {
+									var value = data[i];
+									addData(name + '[]', value);
+								}
+							} else if (typeof data === 'object') {
+								for (var key in data) {
+									if (data.hasOwnProperty(key)) {
+										addData(name + '[' + key + ']', data[key]);
+									}
+								}
+							} else if (data != null) {
+								form.append($('<input>').attr({
+									type: 'hidden',
+									name: String(name),
+									value: String(data)
+								}));
+							}
+						};
+
+						for (var key in data) {
+							if (data.hasOwnProperty(key)) {
+								addData(key, data[key]);
+							}
+						}
+
+						return form.appendTo('body');
+					}
+				}); 
+			});
+
+			function check_email(email_address){
+				var email_pattern = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+				return email_pattern.test(email_address);
+			}
+
+			function check_name(name){
+				var name_pattern = new RegExp(/^[A-Za-z0-9 ]+$/i)
+				return name_pattern.test(name);
+			}
+
+			function check_eid(eid){
+				if(eid.length > 3){
+					return true;
+				}else{
+					return false;
+				}
+			}
+
+			function check_other(level_checked, name){
+				if(level_checked == "Other"){
+					if(name != "" || name != null){
+						return true;
+					}else{
+						return false;
+					}
+				}else{
+					return true;
+				}
+			}
+
+			$(document).ready(function(){
+				$("#create_user").click(function(){
+					var first_name = $("#first_name").val();
+					var last_name = $("#last_name").val();
+					var eid = $("#eid_value").val();
+					var email = $("#email_value").val();
+					var engineering_type = $("#engineering_types").val();
+					var level_checked = $("input[name=level]:checked").val();
+					var other = $("#other_value").val();
+					var card_value = $("#card_value").val();
+
+					var error = false;
+
+					if(!check_email(email)){
+						$("#email_value").addClass("hasError");
+						error = true;
+					}
+
+					if(!check_name(first_name)){
+						$("#first_name").addClass("hasError");
+						error = true;
+					}
+
+					if(!check_name(last_name)){
+						$("#last_name").addClass("hasError");
+						error = true;
+					}
+
+					if(!check_eid(eid)){
+						$("#eid_value").addClass("hasError");
+						error = true;
+					}
+
+					if(!check_other(level_checked, other)){
+						console.log("Error")
+						error = true;
+					}
+
+					if(!error){
+						$.form('/new_user', { "first_name": first_name, "last_name": last_name, "email": email, "eid": eid, "engineering_type": engineering_type, "level_checked": level_checked, "other": other, "card_value": card_value }).submit();
+					}
+
+				});
+			});
+
+		</script>
+
+		<style>
+			input[type="radio"] {
+				display: inline;
+				margin-bottom: 0px; 
+			}
+			
+			label > .label-body {
+				margin-left: .5rem;
+				font-weight: normal; 
+			}
+
+			.label-body {
+				position:absolute;
+				width: 100px;
+				left: 30px;
+				padding-top: 10px;
+				padding-left: 20px;
+			}
+
+			.lgn_page_btn{
+				width:100%;
+				margin-bottom: 10px;
+			}
+		</style>
+
+	</head>
+	<body>
+		<!-- title -->
+		<div class="row">
+	        <div class="col-md-3">
+	        </div>
+        	<div class="col-md-6"> 
+        		<center><h1><span style="color:gray">New User</span> Creation</h1></center>
+        	</div>
+	        <div class="col-md-3">
+	        </div>
+	    </div>
+
+	    <div class="row">
+	        <div class="col-md-3">
+	        </div>
+        	<div class="col-md-6"> 
+        		<center><h3>User Details</h3></center>
+        	</div>
+	        <div class="col-md-3">
+	        </div>
+	    </div>
+
+	    <!-- email container -->
+        <div class="row">
+        	<div class="col-md-3">
+        	</div>
+        	<div class="col-md-6">  
+        		<span>First Name:</span>          	
+				<input type="text" class="form-control inputs" id="first_name" placeholder="First Name"/>
+			</div>
+			<div class="col-md-3"> 
+        	</div>
+        </div>
+
+        <!-- email container -->
+        <div class="row">
+        	<div class="col-md-3">
+        	</div>
+        	<div class="col-md-6">    
+        		<span>Last Name:</span>     	
+				<input type="text" class="form-control inputs" id="last_name" placeholder="Last Name"/>
+			</div>
+			<div class="col-md-3"> 
+        	</div>
+        </div>
+
+        <!-- email container -->
+        <div class="row">
+        	<div class="col-md-3">
+        	</div>
+        	<div class="col-md-6"> 
+        		<span>EID:</span>        	
+				<input type="text" class="form-control inputs" id="eid_value" placeholder="UT EID"/>
+			</div>
+			<div class="col-md-3"> 
+        	</div>
+        </div>
+
+        <div class="row">
+	        <div class="col-md-3">
+	        </div>
+        	<div class="col-md-6"> 
+        		<center><h3>Contact Info</h3></center>
+        	</div>
+	        <div class="col-md-3">
+	        </div>
+	    </div>
+
+
+	    <!-- email container -->
+        <div class="row">
+        	<div class="col-md-3">
+        	</div>
+        	<div class="col-md-6">   
+        		<span>Email Address:</span>      	
+				<input type="text" class="form-control inputs" id="email_value" placeholder="Email"/>
+			</div>
+			<div class="col-md-3"> 
+        	</div>
+        </div>
+
+
+        <div class="row">
+			<div class="col-md-3">
+			</div>
+			<div class="col-md-6">
+				<span>Engineering Major:</span>  
+				<select id="engineering_types" class="form-control inputs">
+					<option value="Aerospace">Aerospace</option>
+					<option value="Architectural">Architectural</option>
+					<option value="Mechanical">Mechanical</option>
+					<option value="Electrical">Electrical</option>
+					<option value="Civil">Civil</option>
+					<option value="Chemical">Chemical</option>
+					<option value="Biomedical">Biomedical</option>
+					<option value="Petroleum">Petroleum</option>
+					<option value="Geosystems">Geosystems</option>
+					<option value="Engineering">Other Engineering</option>
+				</select>
+			</div>
+			<div class="col-md-3"> 
+			</div>
+		</div>
+
+		<div class="row">
+        	<div class="col-md-3">
+        	</div>
+        	<div class="col-md-6">   
+		        <center><h3> Select Classification </h3></center>
+		       
+		        <div style="width: 100%"><input class="form-control inputs" type="radio" style="width:60px;" checked="checked" name="level" value="Undergraduate" /> <span class="label-body">Undergraduate</span> <br></div>
+
+				<div style="width: 100%"><input class="form-control inputs" type="radio" style="width:60px;" name="level" value="Graduate" /> <span class="label-body">Graduate</span> <br></div>
+
+				<div style="width: 100%"><input class="form-control inputs" type="radio" style="width:60px;" name="level" value="Professor" /> <span class="label-body">Professor</span> <br></div>
+
+				<div style="width: 100%"><input class="form-control inputs" type="radio" style="width:60px;" name="level" value="Other" /> <span class="label-body">Other</span> 
+
+				<input type="text" class="form-control inputs" id="other_value" placeholder="Other"/>
+				
+				<br></div>
+
+			</div>
+			<div class="col-md-3">
+        	</div>
+        </div>
+
+		<!-- button container -->
+        <div class="row">
+        	<div class="col-md-3">
+			</div>
+			<div class="col-md-6">
+				<button id="create_user" class="btn btn-primary lgn_page_btn">
+					Create User
+				</button>
+	        </div>
+			<div class="col-md-3"> 
+        	</div>
+        </div>
+
+        <input style="visibility:hidden" id="card_value" value="<%= card_value %>"/>
+
+	</body>
+</html>
