@@ -138,6 +138,11 @@
 		</script>
 
 		<style>
+			body{
+				background-size: cover;
+				background-repeat: no-repeat;
+			}
+
 			input[type="radio"] {
 				display: inline;
 				margin-bottom: 0px; 
@@ -169,7 +174,7 @@
 	        <div class="col-md-3">
 	        </div>
         	<div class="col-md-6"> 
-        		<center><h1><span style="color:gray">New User</span> Creation</h1></center>
+        		<center><h1><span style="color:#005F86">New User</span><span style="color:#BF5700">Creation</span></h1></center>
         	</div>
 	        <div class="col-md-3">
 	        </div>
@@ -179,7 +184,7 @@
 	        <div class="col-md-3">
 	        </div>
         	<div class="col-md-6"> 
-        		<center><h3>User Details</h3></center>
+        		<center><h3 style="color:#005F86">User Details</h3></center>
         	</div>
 	        <div class="col-md-3">
 	        </div>
@@ -190,7 +195,7 @@
         	<div class="col-md-3">
         	</div>
         	<div class="col-md-6">  
-        		<span>First Name:</span>          	
+        		<span style="color:#005F86">First Name:</span>          	
 				<input type="text" class="form-control inputs" id="first_name" placeholder="First Name"/>
 			</div>
 			<div class="col-md-3"> 
@@ -202,7 +207,7 @@
         	<div class="col-md-3">
         	</div>
         	<div class="col-md-6">    
-        		<span>Last Name:</span>     	
+        		<span style="color:#005F86">Last Name:</span>     	
 				<input type="text" class="form-control inputs" id="last_name" placeholder="Last Name"/>
 			</div>
 			<div class="col-md-3"> 
@@ -214,7 +219,7 @@
         	<div class="col-md-3">
         	</div>
         	<div class="col-md-6"> 
-        		<span>EID:</span>        	
+        		<span style="color:#005F86">EID:</span>        	
 				<input type="text" class="form-control inputs" id="eid_value" placeholder="UT EID"/>
 			</div>
 			<div class="col-md-3"> 
@@ -225,7 +230,7 @@
 	        <div class="col-md-3">
 	        </div>
         	<div class="col-md-6"> 
-        		<center><h3>Contact Info</h3></center>
+        		<center><h3 style="color:#005F86">Contact Info</h3></center>
         	</div>
 	        <div class="col-md-3">
 	        </div>
@@ -237,7 +242,7 @@
         	<div class="col-md-3">
         	</div>
         	<div class="col-md-6">   
-        		<span>Email Address:</span>      	
+        		<span style="color:#005F86">Email Address:</span>      	
 				<input type="text" class="form-control inputs" id="email_value" placeholder="Email"/>
 			</div>
 			<div class="col-md-3"> 
@@ -249,7 +254,7 @@
 			<div class="col-md-3">
 			</div>
 			<div class="col-md-6">
-				<span>Engineering Major:</span>  
+				<span style="color:#005F86">Engineering Major:</span>  
 				<select id="engineering_types" class="form-control inputs">
 					<option value="Aerospace">Aerospace</option>
 					<option value="Architectural">Architectural</option>
@@ -271,15 +276,15 @@
         	<div class="col-md-3">
         	</div>
         	<div class="col-md-6">   
-		        <center><h3> Select Classification </h3></center>
+		        <center><h3 style="color:#005F86"> Select Classification </h3></center>
 		       
-		        <div style="width: 100%"><input class="form-control inputs" type="radio" style="width:60px;" checked="checked" name="level" value="Undergraduate" /> <span class="label-body">Undergraduate</span> <br></div>
+		        <div style="width: 100%"><input class="form-control inputs" type="radio" style="width:60px;color:#005F86"checked="checked" name="level" value="Undergraduate" /> <span class="label-body" style="color:#005F86">Undergraduate</span> <br></div>
 
-				<div style="width: 100%"><input class="form-control inputs" type="radio" style="width:60px;" name="level" value="Graduate" /> <span class="label-body">Graduate</span> <br></div>
+				<div style="width: 100%"><input class="form-control inputs" type="radio" style="width:60px;color:#005F86" name="level" value="Graduate" /> <span class="label-body" style="color:#005F86">Graduate</span> <br></div>
 
-				<div style="width: 100%"><input class="form-control inputs" type="radio" style="width:60px;" name="level" value="Professor" /> <span class="label-body">Professor</span> <br></div>
+				<div style="width: 100%"><input class="form-control inputs" type="radio" style="width:60px;color:#005F86" name="level" value="Professor" /> <span class="label-body" style="color:#005F86">Professor</span> <br></div>
 
-				<div style="width: 100%"><input class="form-control inputs" type="radio" style="width:60px;" name="level" value="Other" /> <span class="label-body">Other</span> 
+				<div style="width: 100%"><input class="form-control inputs" type="radio" style="width:60px;color:#005F86" name="level" value="Other" /> <span class="label-body" style="color:#005F86">Other</span> 
 
 				<input type="text" class="form-control inputs" id="other_value" placeholder="Other"/>
 				
@@ -295,7 +300,7 @@
         	<div class="col-md-3">
 			</div>
 			<div class="col-md-6">
-				<button id="create_user" class="btn btn-primary lgn_page_btn">
+				<button id="create_user" style="background-color:#005F86" class="btn btn-primary lgn_page_btn">
 					Create User
 				</button>
 	        </div>

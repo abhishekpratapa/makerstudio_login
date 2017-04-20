@@ -18,14 +18,20 @@
   },
   "homepage": "https://github.com/abhishekpratapa/makerstudio_login#readme",
   "dependencies": {
+    "basic-auth": "1.1.0",
     "body-parser": "^1.16.1",
+    "checksum": "0.1.1",
     "cookie-parser": "^1.4.3",
+    "crypto": "0.0.3",
+    "deasync": "0.1.9",
     "ejs": "^2.5.6",
     "express": "^4.14.1",
     "jsonwebtoken": "^7.3.0",
     "mongoose": "^4.8.4",
     "morgan": "^1.8.1",
     "pg": "^6.1.2",
-    "sequelize": "^3.30.2"
+    "sequelize": "^3.30.2",
+    "sync-request": "4.0.2",
+    "synquelize": "0.0.2"
   }
 }

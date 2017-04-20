@@ -16,7 +16,7 @@
 /************************************************/
 
 // deployment variables
-var deployment = false;
+var deployment = true;
 var delete_data = true;
 
 // Express import
@@ -40,6 +40,15 @@ var morgan = require('morgan');
 
 // Database modeler import
 var mongoose = require('mongoose');
+
+// Import the checksum, to verify our tokens (extra security)
+var checksum = require('checksum');
+
+// Import basic authentication
+var basicAuth = require('basic-auth');
+
+// Import crypto
+var crypto = require('crypto');
 
 var sequalize;
 var match;
@@ -153,6 +162,56 @@ if(delete_data){
 	});
 }
 
+// authentication function
+var auth = function (req, res, next) {
+	function unauthorized(res) {
+		res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+		return res.send(401);
+	};
+
+	var user = basicAuth(req);
+
+	if (!user || !user.name || !user.pass) {
+		return unauthorized(res);
+	};
+
+	var new_password = crypto.createHash('sha256').update(user.pass).digest('base64'); 
+
+	var correct_password = crypto.createHash('sha256').update("makerspacelogin").digest('base64'); 
+
+	if (user.name === 'login@utmakerspace.co' && new_password === correct_password) {
+		return next();
+	} else {
+		return unauthorized(res);
+	};
+
+};
+
+// second authentication
+var auth2 = function (req, res, next) {
+	function unauthorized(res) {
+		res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+		return res.send(401);
+	};
+
+	var user = basicAuth(req);
+
+	if (!user || !user.name || !user.pass) {
+		return unauthorized(res);
+	};
+
+	var new_password = crypto.createHash('sha256').update(user.pass).digest('base64'); 
+
+	var correct_password = crypto.createHash('sha256').update("makerspacelogin").digest('base64'); 
+
+	if (user.name === 'steve@utmakerspace.co' && new_password === correct_password) {
+		return next();
+	} else {
+		return unauthorized(res);
+	};
+
+};
+
 // port number
 var port = ((deployment) ? (port = process.env.PORT || 80) : (port = process.env.PORT || 8090));
 
@@ -164,15 +223,18 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 app.use(cookieParser("DD4CAB6D6045344DC80F8A283E3A10429E546775939AEEDAC8AD492A929BA89D"));
 
+// static files
 app.use("/css", express.static(__dirname + '/css'));
 app.use("/img", express.static(__dirname + '/img'));
 app.use("/fonts", express.static(__dirname + '/fonts'));
 
-app.get("/", function(req, res) {
+// get homepage
+app.get("/", auth, function(req, res) {
 	res.render("card_scan");
 });
 
-app.post("/check_card", function(req, res) {
+// secondary check page
+app.post("/check_card", auth, function(req, res) {
 	var check_card_value = req.body.card_val || req.params.card_val;
 
 	if(check_card_value == null){
@@ -189,7 +251,8 @@ app.post("/check_card", function(req, res) {
 
 });
 
-app.post("/new_user", function(req, res) {
+// create a new user
+app.post("/new_user", auth, function(req, res) {
 	
 	var card_val = req.body.card_value || req.params.card_value;
 	var first_name_val = req.body.first_name || req.params.first_name;
@@ -218,7 +281,8 @@ app.post("/new_user", function(req, res) {
 
 });
 
-app.post("/validate_login", function(req, res) {
+// validate the login
+app.post("/validate_login", auth, function(req, res) {
 
 	var card_val = req.body.card_value || req.params.card_value;
 	var laser_cutter_value = req.body.laser_cutter_value || req.params.laser_cutter_value;
@@ -256,13 +320,35 @@ app.post("/validate_login", function(req, res) {
 					"created": ((new Date).getTime())
 				}
 
-				// return to home page
 				return 	Session_db.create(session_details).then(function(return_created){
 							res.render("card_scan");
 						});
 			});
 
 });
+
+// GET the User CSV
+app.get("/all_user.csv", auth2, function(req, res) {
+	var csv_file = "user_id, first_name, last_name, email, utEID, created, status, other_status, engineering_type, laser_cutter_value, three_d_printer_value, three_d_printer_value, pcb_mill_value, cnc_mill_value, plasma_cutter_value, soldering_iron_value, desk_space_value, sewing_machine_value, stapler_value, tools_value, other_value, other_val_sent, level_checked, other_val_sent_2, created\n";
+
+	return User_db.findAll().then(function(user){
+		return Session_db.findAll().then(function(sessions){
+			console.log(user.length)
+
+			for(var x = 0; x < user.length; x++){
+				for(x = s = 0; s < sessions.length; s++){
+					if(sessions[s].get("user_id") == user[x].get("user_id")){
+						csv_file = csv_file + user[x].get("user_id") + "," + user[x].get("first_name") + "," + user[x].get("last_name") + "," + user[x].get("email") + "," + user[x].get("utEID") + "," + user[x].get("created") + "," + user[x].get("status") + "," + user[x].get("other_status") + "," + user[x].get("engineering_type") + "," + sessions[s].get("laser_cutter_value") + "," + sessions[s].get("three_d_printer_value") + "," + sessions[s].get("pcb_mill_value") + "," + sessions[s].get("cnc_mill_value") + "," + sessions[s].get("plasma_cutter_value")+ "," + sessions[s].get("soldering_iron_value") + "," + sessions[s].get("desk_space_value") + "," + sessions[s].get("sewing_machine_value") + "," + sessions[s].get("stapler_value") + "," + sessions[s].get("tools_value") + "," + sessions[s].get("other_value") + "," + sessions[s].get("other_val_sent") + "," + sessions[s].get("level_checked") + "," + sessions[s].get("other_val_sent_2") + "," + sessions[s].get("created") + "\n";
+					}
+				}
+			}
+			res.setHeader('Content-disposition', 'attachment; filename=all_user.csv');
+			res.header("Content-Type", "text/csv");
+			return res.send(csv_file);
+		});
+	});
+});
+
 
 app.listen(port);
 console.log('Magic happens at http://localhost:' + port);
