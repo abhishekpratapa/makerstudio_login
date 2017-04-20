@@ -18,7 +18,7 @@
 
 // deployment variables
 var deployment = true;
-var delete_data = true;
+var delete_data = false;
 
 // Express import
 var express = require('express');
